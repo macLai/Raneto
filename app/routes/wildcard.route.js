@@ -8,6 +8,7 @@ var marked                         = require('marked');
 var toc                            = require('markdown-toc');
 var get_last_modified              = require('../functions/get_last_modified.js');
 var remove_image_content_directory = require('../functions/remove_image_content_directory.js');
+var mysql                          = require('../middleware/mysql_control');
 
 function route_wildcard (config, raneto) {
   return function (req, res, next) {
@@ -92,18 +93,49 @@ function route_wildcard (config, raneto) {
           canEdit = config.allow_editing;
         }
 
-        return res.render(render, {
-          config        : config,
-          pages         : page_list,
-          meta          : meta,
-          content       : content,
-          body_class    : template + '-' + raneto.cleanString(slug),
-          last_modified : get_last_modified(config,meta,file_path),
-          lang          : config.lang,
-          loggedIn      : loggedIn,
-          username      : (config.authentication ? req.session.username : null),
-          canEdit       : canEdit
-        });
+        var username = req.cookies["diff_view"];
+
+        var res_render = function() {
+          return res.render(render, {
+            config        : config,
+            pages         : page_list,
+            meta          : meta,
+            content       : content,
+            body_class    : template + '-' + raneto.cleanString(slug),
+            last_modified : get_last_modified(config,meta,file_path),
+            lang          : config.lang,
+            loggedIn      : loggedIn,
+            username      : username,
+            canEdit       : canEdit,
+            commentlist   : commentlist,
+            key           : key,
+            slug          : slug,
+            isShow        : function() {
+                              return username == this.name;
+                            }
+          });
+        }
+
+        // Render key
+        // Render comment list
+        var commentlist = [];
+        var key = "";
+        if (file_path_orig.indexOf(suffix, file_path_orig.length - suffix.length) == -1) {
+          try{
+            key = /<comment\s+id=\"([a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+)\"\s+\/>/.exec(content)[1];
+          }
+          catch(err) {
+            return res_render();
+          }
+          
+          mysql.getComments(key, function(result) {
+            commentlist = JSON.parse(JSON.stringify(result));
+            return res_render(); 
+          });
+        }
+        else {
+          return res_render();
+        }
 
       }
 

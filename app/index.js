@@ -34,6 +34,7 @@ function initialize (config) {
   var authenticate_read_access  = require ('./middleware/authenticate_read_access.js')  (config);
   var error_handler             = require('./middleware/error_handler.js')              (config);
   var oauth2                    = require('./middleware/oauth2.js');
+  var mysql                     = require('./middleware/mysql_control');
   var route_login               = require('./routes/login.route.js')                    (config);
   var route_login_page          = require('./routes/login_page.route.js')               (config);
   var route_logout              = require('./routes/logout.route.js');
@@ -45,6 +46,12 @@ function initialize (config) {
   var route_home                = require('./routes/home.route.js')                     (config, raneto);
   var route_wildcard            = require('./routes/wildcard.route.js')                 (config, raneto);
   var route_sitemap             = require('./routes/sitemap.route.js')                  (config, raneto);
+  var route_comment             = require('./routes/comment.route.js')                  (config, raneto);
+  var route_comment_post        = require('./routes/comment.post.route.js')             (config, raneto);
+  var rout_page_list            = require('./routes/page_list.route.js')                (config, raneto);
+
+  // Mysql Connect
+  mysql.connectCommentSql(config, null);
 
   // New Express App
   var app = express();
@@ -117,6 +124,12 @@ function initialize (config) {
     app.post('/rn-add-category', middlewareToUse, route_category_create);
 
   }
+
+  // Comment request
+  app.post(/_comment\/([a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+)*$/, route_comment_post);
+
+  // PageList request
+  app.post(/_pagelist\/*/, rout_page_list);
 
   // Router for / and /index with or without search parameter
   if (config.googleoauth === true) {

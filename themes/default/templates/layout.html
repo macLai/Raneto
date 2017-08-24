@@ -11,8 +11,10 @@
   <link rel="shortcut icon" href="{{config.base_url}}/favicon.ico">
   <link rel="stylesheet" href="{{config.base_url}}/lib/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{config.base_url}}/lib/highlightjs/styles/solarized_light.css">
+  <link rel="stylesheet" href="{{config.base_url}}/styles/zTreeStyle.css">
   <link rel="stylesheet" href="{{config.base_url}}/styles/raneto.css">
   <link rel="stylesheet" href="{{config.base_url}}/styles/ghostdown.css">
+  <link rel="stylesheet" href="{{config.base_url}}/styles/comment.css">
   {{#config.rtl_layout}}
   <link rel="stylesheet" href="{{config.base_url}}/styles/raneto.rtl.css">
   <link rel="stylesheet" href="{{config.base_url}}/lib/bootstrap-rtl/dist/css/bootstrap-rtl.min.css">
@@ -23,68 +25,10 @@
 </head>
 <body class="{{body_class}}">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-6">
-          <a href="{{config.base_url}}/" class="logo">{{config.site_title}}</a>
-        </div>
-        <div class="col-sm-6">
-          {{#config.googleoauth}}
-          <form class="form-inline pull-right">
-            {{#config.authentication}} {{#loggedIn}} &nbsp;
-            <span>{{profile.displayName}}</span> &nbsp;
-            <a href="{{config.base_url}}/auth/logout" class="btn btn-info">{{lang.login.logout}}</a> {{/loggedIn}} {{^loggedIn}} &nbsp;
-            <a href="{{config.base_url}}/auth/login" class="btn btn-info">{{lang.login.login}}</a> {{/loggedIn}} {{/config.authentication}}
-          </form>
-          {{/config.googleoauth}}
-
-          {{^config.googleoauth}}
-          <form class="form-inline pull-right">
-            {{#config.authentication}}
-              {{#loggedIn}}
-                <div class="dropdown">
-                  <button class="btn btn-info dropdown-toggle" type="button" id="userDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {{username}}
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropDown">
-                    <li><a href="{{config.base_url}}/logout" class="btn btn-info">{{lang.login.logout}}</a></li>
-                  </ul>
-                </div>
-              {{/loggedIn}}
-              {{^loggedIn}}
-                &nbsp;<a href="{{config.base_url}}/login" class="btn btn-info">{{lang.login.login}}</a>
-              {{/loggedIn}}
-            {{/config.authentication}}
-          </form>
-          {{/config.googleoauth}}
-          
-          <form class="search-form form-inline pull-right" action="{{config.base_url}}/">
-            <div class="form-group">
-              <label class="sr-only" for="search">{{lang.global.search}}</label>
-              <input type="search" class="form-control" name="search" id="search" size="30" value="{{search}}" placeholder="{{lang.global.search}}">
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </header>
-
   <!-- Main -->
   <div class="container-fluid">
     {{{yield}}}
   </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container-fluid">
-      {{#config.copyright}}
-        <p class="copyright pull-right">{{{config.copyright}}}</p>
-      {{/config.copyright}}
-    </div>
-  </footer>
 
   {{#config.allow_editing}}
   {{#loggedIn}}
@@ -133,12 +77,13 @@
 
   <!-- JavaScript -->
   <script src="{{config.base_url}}/lib/jquery/dist/jquery.min.js"></script>
+  <script src="{{config.base_url}}/lib/ztree/js/jquery.ztree.all.js"></script>
   <script src="{{config.base_url}}/lib/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="{{config.base_url}}/lib/highlightjs/highlight.pack.min.js"></script>
   <script src="{{config.base_url}}/lib/fitvids/fitvids.min.js"></script>
   <script src="{{config.base_url}}/lib/masonry-layout/dist/masonry.pkgd.min.js"></script>
   <script src="{{config.base_url}}/scripts/ghostdown.js"></script>
+  <script src="{{config.base_url}}/scripts/comment.js"></script>
   <script src="{{config.base_url}}/scripts/raneto.js"></script>
-
 </body>
 </html>

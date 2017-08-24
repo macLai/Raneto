@@ -1,0 +1,409 @@
+.cell {
+    padding: 10px;
+    font-size: 12px;
+    line-height: 120%;
+    text-align: left;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.fr {
+    float: right;
+    text-align: right;
+}
+
+.no {
+    font-size: 9px;
+    line-height: 9px;
+    font-weight: 500;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #ccc;
+    padding: 2px 5px 2px 5px;
+    cursor: pointer;
+}
+
+.sep3 {
+    height: 3px;
+}
+
+a.dark:link, a.dark:visited, a.dark:active {
+    color: gray;
+    text-decoration: none;
+}
+
+.ago {
+    font-size: 11px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.sep5 {
+    height: 5px;
+}
+
+.reply_content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #000;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.box {
+     /* background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #e2e2e2;
+    margin: 40px 20px; */
+    max-width: 800px; 
+    padding: 30px 15px 40px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.mll {
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    display: block;
+    width: 100%;
+    height: 8em;
+    overflow-y: auto;
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.sep10 {
+    height: 10px;
+}
+
+.heart {
+    font-size: 11px;
+    color: #ccc;
+}
+
+.sinput {
+    border: 1px solid #ccc;
+    width: 100px;
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+}
+
+a:link, a:visited, a:active {
+    color: #778087;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+/*  page画面整体  */
+.sidebar {
+    border-right: 1px solid rgba(0,0,0,.07);
+    overflow-y: auto;
+    padding: 40px 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    width: 300px;
+
+    background-color: #fff;
+    color: #364149;
+    padding-top: 0;
+    position: fixed;
+}
+
+.article {
+    padding-top: 20px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 300px;
+    position: absolute;
+    transition: left .25s ease;
+}
+
+.search {
+    margin-bottom: 20px;
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.search input {
+    outline: none;
+    border: none;
+    width: 100%;
+    padding: 7px;
+    line-height: 22px;
+    font-size: 14px;
+    -webkit-appearance: none;
+}
+
+main {
+    display: block;
+    position: relative;
+    width: 100vw;
+    height: 100%;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+}
+
+.sidebar>h1 {
+    font-size: 3.5rem;
+    margin: 0 auto 1rem;
+    font-weight: 300;
+    text-align: center;
+}
+
+/*  markdown design  */
+.markdown-section {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 30px 15px 40px;
+    position: relative
+}
+
+.markdown-section>* {
+    box-sizing: border-box;
+    font-size: inherit
+}
+
+.markdown-section>:first-child {
+    margin-top: 0!important
+}
+
+.markdown-section hr {
+    border: none;
+    border-bottom: 1px solid #eee;
+    margin: 2em 0
+}
+
+.markdown-section table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: block;
+    margin-bottom: 16px;
+    margin-bottom: 1rem;
+    overflow: auto;
+    width: 100%
+}
+
+.markdown-section th {
+    font-weight: 700
+}
+
+.markdown-section td,
+.markdown-section th {
+    border: 1px solid #ddd;
+    padding: 6px 13px
+}
+
+.markdown-section tr {
+    border-top: 1px solid #ccc
+}
+
+.markdown-section p.tip,
+.markdown-section tr:nth-child(2n) {
+    background-color: #f8f8f8
+}
+
+.markdown-section p.tip {
+    border-bottom-right-radius: 2px;
+    border-left: 4px solid #f66;
+    border-top-right-radius: 2px;
+    margin: 2em 0;
+    padding: 12px 24px 12px 30px;
+    position: relative
+}
+
+.markdown-section p.tip code {
+    background-color: #efefef
+}
+
+.markdown-section p.tip em {
+    color: #34495e
+}
+
+.markdown-section p.tip:before {
+    background-color: #f66;
+    border-radius: 100%;
+    color: #fff;
+    content: "!";
+    font-family: Dosis, Source Sans Pro, Helvetica Neue, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    left: -12px;
+    line-height: 20px;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    top: 14px
+}
+
+.markdown-section p.warn {
+    background: rgba(66, 185, 131, .1);
+    border-radius: 2px;
+    padding: 16px;
+    padding: 1rem
+}
+
+.markdown-section .title {
+  margin: 0 0 30px 0;
+}
+
+.markdown-section h1,
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4,
+.markdown-section strong {
+    color: #2c3e50;
+    font-weight: 600
+}
+
+.markdown-section a {
+    color: #42b983;
+    color: var(--theme-color, #42b983);
+    font-weight: 600
+}
+
+.markdown-section h1 {
+    font-size: 32px;
+    font-size: 2rem;
+    margin: 0 0 16px;
+    margin: 0 0 1rem
+}
+
+.markdown-section h2 {
+    font-size: 28px;
+    font-size: 1.75rem;
+    margin: 45px 0 12.8px;
+    margin: 45px 0 .8rem
+}
+
+.markdown-section h3 {
+    font-size: 24px;
+    font-size: 1.5rem;
+    margin: 40px 0 9.6px;
+    margin: 40px 0 .6rem
+}
+
+.markdown-section h4 {
+    font-size: 20px;
+    font-size: 1.25rem
+}
+
+.markdown-section h5,
+.markdown-section h6 {
+    font-size: 16px;
+    font-size: 1rem
+}
+
+.markdown-section h6 {
+    color: #777
+}
+
+.markdown-section figure,
+.markdown-section ol,
+.markdown-section p,
+.markdown-section ul {
+    margin: 1.2em 0
+}
+
+.markdown-section ol,
+.markdown-section p,
+.markdown-section ul {
+    line-height: 25.6px;
+    line-height: 1.6rem;
+    word-spacing: .8px;
+    word-spacing: .05rem
+}
+
+.markdown-section ol,
+.markdown-section ul {
+    padding-left: 24px;
+    padding-left: 1.5rem
+}
+
+.markdown-section blockquote {
+    border-left: 4px solid #42b983;
+    border-left: 4px solid var(--theme-color, #42b983);
+    color: #858585;
+    margin: 2em 0;
+    padding-left: 20px
+}
+
+.markdown-section blockquote p {
+    font-weight: 600;
+    margin-left: 0
+}
+
+.markdown-section iframe {
+    margin: 1em 0
+}
+
+.markdown-section em {
+    color: #7f8c8d
+}
+
+.markdown-section code {
+    border-radius: 2px;
+    color: #e96900;
+    font-size: 12.8px;
+    font-size: .8rem;
+    margin: 0 2px;
+    padding: 3px 5px;
+    white-space: pre-wrap
+}
+
+.markdown-section code,
+.markdown-section pre {
+    background-color: #f8f8f8;
+    font-family: Roboto Mono, Monaco, courier, monospace
+}
+
+.markdown-section pre {
+    -moz-osx-font-smoothing: initial;
+    -webkit-font-smoothing: initial;
+    line-height: 24px;
+    line-height: 1.5rem;
+    margin: 1.2em 0;
+    overflow: auto;
+    padding: 0 22.4px;
+    padding: 0 1.4rem;
+    position: relative;
+    word-wrap: normal
+}
+
+.markdown-section pre>code {
+    -moz-osx-font-smoothing: initial;
+    -webkit-font-smoothing: initial;
+    background-color: #f8f8f8;
+    border-radius: 2px;
+    color: #525252;
+    display: block;
+    font-family: Roboto Mono, Monaco, courier, monospace;
+    font-size: 12.8px;
+    font-size: .8rem;
+    line-height: inherit;
+    margin: 0 2px;
+    max-width: inherit;
+    overflow: inherit;
+    padding: 2.2em 5px;
+    white-space: inherit
+}
+
+.markdown-section code:after,
+.markdown-section code:before {
+    letter-spacing: .8px;
+    letter-spacing: .05rem
+}
+

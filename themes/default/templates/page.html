@@ -1,8 +1,16 @@
 
-<div class="row">
-  <div class="col-sm-3 hidden-xs">
+<main>
+  <div class="sidebar">
+    <div class="search">
+      <input type="search" value="" placeholder="Search">
+      <div class="results-panel">
+    </div>
+  </div>
 
-    <ul class="menu">
+  <h1><a class="app-name-link" data-nosearch="" href="/">wee-kee</a></h1>
+
+  <div class="sidebar-nav zTreeDemoBackground left">
+    <!-- <ul class="menu">
       {{#canEdit}}
         <li><input id="newCategory" type="text" class="form-control" placeholder="{{lang.page.addCategory}}"/></li>
       {{/canEdit}}
@@ -22,12 +30,14 @@
           </ul>
         </li>
       {{/pages}}
-    </ul>
+    </ul> -->
+    <ul id="treeDemo" class="ztree"></ul>
+  </div>
 
   </div>
-  <div class="col-sm-9">
+  <div class="article">
 
-    <section class="content">
+    <section class="markdown-section">
 
       {{#canEdit}}
         <div class="btn-group btn-group-sm pull-right">
@@ -58,5 +68,67 @@
 
     </section>
 
+    <div id="comment" class="box">
+      {{#commentlist}}
+      <div id="floor{{floor}}" class="cell">
+        <div width="auto" valign="top" align="left">
+          <div class="fr">
+            {{#isShow}}
+            <a href="#;" onclick="removeOne({{floor}});">
+              <img src="{{config.base_url}}/images/remove.png" align="absmiddle" border="0" alt="Reply">
+            </a> &nbsp;&nbsp; 
+            <a href="#;" onclick="editOne({{floor}});">
+              <img src="{{config.base_url}}/images/edit.png" align="absmiddle" border="0" alt="Reply">
+            </a> &nbsp;&nbsp; 
+            {{/isShow}}
+            <a href="#;" onclick="replyOne('{{name}}');">
+              <img src="{{config.base_url}}/images/reply.png" align="absmiddle" border="0" alt="Reply">
+            </a> &nbsp;&nbsp; 
+            <span class="no">{{floor}}</span>
+          </div>
+          <div class="sep3"></div>
+          <strong><a class="dark">{{name}}</a></strong>&nbsp; &nbsp;
+          <span class="ago">{{time}}</span>&nbsp; 
+          {{#project}}
+          <span class="heart">♥ </span>
+          <span class="reply_project heart">{{project}}</span>
+          {{/project}}
+          <div class="sep5"></div>
+          <div class="reply_content">{{{data}}}</div>
+        </div>
+      </div>
+      {{/commentlist}}
+    </div>
+    <div class="box">
+      {{#username}}
+      <div class="cell">
+        <div class="fr"></div>
+          <a class="dark">@{{username}}</a> 添加一条新回复
+      </div>
+      <div class="cell">
+        <form method="post" action="_comment/{{key}}" id="comment_post">
+          <textarea name="content" maxlength="10000" class="mll" wrap="hard" id="reply_content" style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
+          <div class="sep10"></div>
+        
+          <input type="hidden" value="{{username}}" name="username">
+          <input type="hidden" value="insert" name="action">
+          <input type="hidden" value="{{slug}}" name="slug">
+          <input type="text" style="display: none;">
+          <div class="fr">
+            <span class="heart" style="font-size: 16px;">♥</span>&nbsp;
+            <input type="text" class="sinput" id="reply_project" placeholder="project" maxlength="40" name="project" value="">
+          </div>
+          <input type="submit" value="回复" class="super normal button"> 
+        </form>
+      </div>
+      {{/username}}
+      {{^username}}
+      <div class="cell">
+        <div class="fr"></div>
+        login and then comment.
+      </div>
+      {{/username}}
+    </div>
+
   </div>
-</div>
+</main>

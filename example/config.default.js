@@ -104,7 +104,18 @@ var config = {
   //  }
   //]
 
-  table_of_contents: false
+  table_of_contents: false,
+
+  // Database Settings
+  db_host: '127.0.0.1',
+  db_port: '3306',
+  db_user: 'root',
+  db_pass: 'Dnss1234',
+
+  db_account_name: 'test',
+  table_account_name: 'account',
+  db_comment_name: 'test',
+  table_comment_name: 'comment',
 
 };
 
