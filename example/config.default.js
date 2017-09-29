@@ -4,10 +4,12 @@
 var config = {
 
   // Your site title (format: page_title - site_title)
-  site_title: 'Raneto Docs',
+  site_title: 'Wee-Kee',
 
   // The base URL of your site (can use %base_url% in Markdown files)
-  base_url: '',
+  base_url: 'http://localhost:3000',
+  base_suburl: 'wiki',
+  proxy_reverse_url: 'http://localhost',
 
   // Used for the "Get in touch" page footer link
   support_email: '',
@@ -33,10 +35,13 @@ var config = {
   // Specify the path of your content folder where all your '.md' files are located
   // Fix: Needs trailing slash for now!
   // Fix: Cannot be an absolute path
-  content_dir : __dirname + '/content/',
+  content_dir : __dirname + '/../../content/',
 
   // Where is the public directory or document root?
   public_dir  : __dirname + '/../themes/default/public/',
+
+  // homepage dir
+  home_dir: '/contributing',
 
   // The base URL of your images folder,
   // Relative to config.public_dir
@@ -116,6 +121,16 @@ var config = {
   table_account_name: 'account',
   db_comment_name: 'test',
   table_comment_name: 'comment',
+  table_articlewatch_name: 'watch',
+
+  // Git Settings
+  git_path: 'http://localhost:5000/root/test',
+
+  // mail
+  mail_address: '578044856@qq.com',
+  mail_server: 'smtp.qq.com',
+  mail_port: 465,
+  mail_password: 'Dnss1234'
 
 };
 

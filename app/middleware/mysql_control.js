@@ -11,7 +11,8 @@ function connectCommentSql(config, resultNotify) {
         user     : config.db_user,       //MySQL认证用户名
         password : config.db_pass,
         port     : config.db_port,
-        database : config.db_name
+        database : config.db_name,
+        connectionLimit: 100
     });
     sql_config = config;
 
@@ -36,6 +37,16 @@ function connectCommentSql(config, resultNotify) {
                     content TEXT, \
                     project VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci, \
                     primary key (floor,commentkey) );" ,
+                function (error, results, fields) {
+                    if(error) throw error;
+                    createWatchTable();
+                });
+        }
+        var createWatchTable = function() {
+            connection.query("CREATE TABLE IF NOT EXISTS " + sql_config.table_articlewatch_name + " ( \
+                    commentkey VARCHAR(100) NOT NULL, \
+                    username VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, \
+                    primary key (username,commentkey) );" ,
                 function (error, results, fields) {
                     if(error) throw error;
                     return resultNotify?resultNotify(true):true;
@@ -151,6 +162,72 @@ function getAccounts(resultNotify) {
     });
 }
 
+function changeWatchStatus(key, user, isChange, resultNotify) {
+    sql_pool.getConnection(function(err, connection) {
+        if(err) throw err;
+        connection.query("SELECT COUNT(*) AS result FROM ??.?? WHERE commentkey = ? AND username = ?;",
+            [sql_config.db_comment_name, sql_config.table_articlewatch_name, key, user],
+            function (error, results, fields) {
+                if(error) throw error;
+                var isExist = Boolean(results[0]["result"]);
+                if(!isChange) return resultNotify(isExist);
+                if(isExist) {
+                    connection.query("DELETE FROM ??.?? WHERE commentkey=? AND username=?;",
+                        [sql_config.db_comment_name, sql_config.table_articlewatch_name, key, user],
+                        function (error, results, fields) {
+                            if(error) throw error;
+                            return resultNotify(false);
+                        });
+                } 
+                else {
+                    connection.query("INSERT INTO ??.??(commentkey,username) VALUES (?, ?)",
+                        [sql_config.db_comment_name, sql_config.table_articlewatch_name, key, user],
+                        function (error, results, fields) {
+                            if(error) throw error;
+                            return resultNotify(true);
+                        });
+                }
+            });
+        connection.release();
+    });
+}
+
+function getWatchMail(key, resultNotify) {
+    sql_pool.getConnection(function(err, connection) {
+        if(err) throw err;
+        connection.query("SELECT b.email AS result FROM ??.?? AS a, ??.?? AS b WHERE a.commentkey = ? AND a.username = b.username",
+        [sql_config.db_comment_name, sql_config.table_articlewatch_name, sql_config.db_account_name, sql_config.table_account_name, key],
+        function (error, results, fields) {
+            if(error) throw error;
+            return resultNotify(results.map(function(x){return x["result"];}));
+        });
+    });
+}
+
+function getUsersMail(users, resultNotify) {
+    sql_pool.getConnection(function(err, connection) {
+        if(err) throw err;
+        connection.query("SELECT email AS result FROM ??.?? WHERE username in ??",
+        [sql_config.db_account_name, sql_config.table_account_name, users],
+        function (error, results, fields) {
+            if(error) throw error;
+            return resultNotify(results.map(function(x){return x["result"];}));
+        });
+    });
+}
+
+function getCommentMail(users, key, resultNotify) {
+    sql_pool.getConnection(function(err, connection) {
+        if(err) throw err;
+        connection.query("SELECT DISTINCT b.email AS result FROM ??.?? AS a, ??.?? AS b WHERE (b.username in (?)) OR (a.commentkey = ? AND a.username = b.username)",
+        [sql_config.db_comment_name, sql_config.table_articlewatch_name, sql_config.db_account_name, sql_config.table_account_name, users.toString(), key],
+        function (error, results, fields) {
+            if(error) throw error;
+            return resultNotify(results.map(function(x){return x["result"];}));
+        });
+    });
+}
+
 
 // Exports
 module.exports = {
@@ -160,5 +237,9 @@ module.exports = {
     updateComment: updateComment,
     getComments: getComments,
     deleteComment: deleteComment,
-    getAccounts: getAccounts
+    getAccounts: getAccounts,
+    changeWatchStatus: changeWatchStatus,
+    getWatchMail: getWatchMail,
+    getUsersMail: getUsersMail,
+    getCommentMail: getCommentMail
 };

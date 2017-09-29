@@ -30,20 +30,33 @@ function removeOne(target) {
     }
 }
 
-
-// 树测试
-var setting = {
-    async: {
-		enable: true,
-		url:"/_pagelist",
-		autoParam:["id", "name", "level"]
-    },
-    view: {
-        showLine: false,
-        showIcon: false
-    }
+function watchOne(key, user) {
+    $.post('/_watchchange/', {key: key, user: user}, function(result) {
+        window.location.reload();
+    })
 }
 
+
+// 树测试
 $(document).ready(function() {
+    var setting = {
+        async: {
+            enable: true,
+            url: $(".sidebar-nav").attr("request"),
+            autoParam:["id", "name", "level"],
+            otherParam:["path", window.location.pathname]
+        },
+        view: {
+            showLine: false,
+            showIcon: false
+        },
+        callback: {
+            beforeClick: function (treeId, treeNode, clickFlag) {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.expandNode(treeNode);
+                return (treeNode.click != false);
+            }
+        }
+    };
     $.fn.zTree.init($("#treeDemo"), setting);
 })

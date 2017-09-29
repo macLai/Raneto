@@ -1,47 +1,41 @@
 
 <main>
   <div class="sidebar">
-    <div class="search">
-      <input type="search" value="" placeholder="Search">
-      <div class="results-panel">
-    </div>
-  </div>
+    <form class="search" action='/{{config.base_suburl}}/'>
+      <input type="search" name='search' placeholder="Search">
+    </form>
 
-  <h1><a class="app-name-link" data-nosearch="" href="/">wee-kee</a></h1>
+  <h1><a class="app-name-link" data-nosearch="" href="/{{config.base_suburl}}">wee-kee</a></h1>
 
-  <div class="sidebar-nav zTreeDemoBackground left">
-    <!-- <ul class="menu">
-      {{#canEdit}}
-        <li><input id="newCategory" type="text" class="form-control" placeholder="{{lang.page.addCategory}}"/></li>
-      {{/canEdit}}
-      
-      {{#pages}}
-        <li class="category">
-          {{#is_index}}
-            <h5 class="category-title">Main Articles {{#canEdit}}<a class="add-page" data-toggle="modal" data-target="#addModal" title="{{lang.page.addPage}}"><span style="font-weight: bold; font-size: 16px; cursor:pointer">&#43;</span></a>{{/canEdit}}</h5>
-          {{/is_index}}
-          {{^is_index}}
-            <h5 class="category-title">{{title}} {{#canEdit}}<a class="add-page" data-toggle="modal" data-target="#addModal" title="{{lang.page.addPage}}"><span style="font-weight: bold; font-size: 16px; cursor:pointer">&#43;</span></a>{{/canEdit}}</h5>
-          {{/is_index}}
-          <ul class="pages">
-            {{#files}}
-              <li class="page{{#active}} active{{/active}}"><a href="{{config.base_url}}/{{slug}}">{{title}}</a></li>
-            {{/files}}
-          </ul>
-        </li>
-      {{/pages}}
-    </ul> -->
+  <div class="sidebar-nav zTreeDemoBackground left" request="/{{config.base_suburl}}/_pagelist">
     <ul id="treeDemo" class="ztree"></ul>
   </div>
 
   </div>
   <div class="article">
-
+      
     <section class="markdown-section">
-
+      <div class="pull-right">
+        {{#key}}
+        {{#username}}
+        <button type="button" class="btn btn-default btn-sm subscribe" onclick="$.post('/{{config.base_suburl}}/_watchchange/', {key: '{{key}}', user: '{{username}}'}, function(result) {window.location.reload();})">
+          {{#watch}}
+          <span class="glyphicon glyphicon-eye-close" style="padding-right: 2px;"></span> unwatch
+          {{/watch}}
+          {{^watch}}
+          <span class="glyphicon glyphicon-eye-open" style="padding-right: 2px;"></span> watch
+          {{/watch}}
+        </button>
+        {{/username}}
+        {{/key}}
+        <button type="button" class="btn btn-default btn-sm subscribe" onclick="window.open('{{config.git_path}}/src/master{{slug}}.md')">
+          <span class="glyphicon glyphicon-pencil" style="padding-right: 2px;"></span> edit
+        </button>
+      </div>
+      
       {{#canEdit}}
         <div class="btn-group btn-group-sm pull-right">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             {{lang.page.actions}} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
@@ -68,7 +62,7 @@
 
     </section>
 
-    <div id="comment" class="box">
+    <div id="comment" class="box markdown-section">
       {{#commentlist}}
       <div id="floor{{floor}}" class="cell">
         <div width="auto" valign="top" align="left">
@@ -99,14 +93,15 @@
       </div>
       {{/commentlist}}
     </div>
-    <div class="box">
+    {{#key}}
+    <div class="box markdown-section">
       {{#username}}
       <div class="cell">
         <div class="fr"></div>
           <a class="dark">@{{username}}</a> 添加一条新回复
       </div>
       <div class="cell">
-        <form method="post" action="_comment/{{key}}" id="comment_post">
+        <form method="post" action="{{config.base_suburl}}/_comment/{{key}}" id="comment_post">
           <textarea name="content" maxlength="10000" class="mll" wrap="hard" id="reply_content" style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
           <div class="sep10"></div>
         
@@ -129,6 +124,7 @@
       </div>
       {{/username}}
     </div>
+    {{/key}}
 
   </div>
 </main>

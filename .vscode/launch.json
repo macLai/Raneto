@@ -15,6 +15,12 @@
             "request": "launch",
             "name": "Test Mysql",
             "program": "${workspaceRoot}/test/middleware.mysql_control.test.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "git init",
+            "program": "${workspaceRoot}/example/gitinit.js"
         }
     ]
 }

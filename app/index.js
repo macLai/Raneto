@@ -14,6 +14,7 @@ var hogan         = require('hogan-express');
 var session       = require('express-session');
 var raneto        = require('./core/lib/raneto.js');
 var passport      = require('passport');
+var cors          = require('cors');
 
 function initialize (config) {
 
@@ -48,13 +49,16 @@ function initialize (config) {
   var route_sitemap             = require('./routes/sitemap.route.js')                  (config, raneto);
   var route_comment             = require('./routes/comment.route.js')                  (config, raneto);
   var route_comment_post        = require('./routes/comment.post.route.js')             (config, raneto);
-  var rout_page_list            = require('./routes/page_list.route.js')                (config, raneto);
+  var route_page_list           = require('./routes/page_list.route.js')                (config, raneto);
+  var route_git_update          = require('./routes/git_update.route.js')               (config, raneto);
+  var watch_change_udate        = require('./routes/watch_change.route.js')             (config, raneto);
 
   // Mysql Connect
   mysql.connectCommentSql(config, null);
 
   // New Express App
   var app = express();
+  app.use(cors());
 
   // Setup Port
   app.set('port', process.env.PORT || 3000);
@@ -126,10 +130,16 @@ function initialize (config) {
   }
 
   // Comment request
-  app.post(/_comment\/([a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+)*$/, route_comment_post);
+  app.post(new RegExp( config.base_suburl + '\/_comment\/([a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+)*$'), route_comment_post);
 
   // PageList request
-  app.post(/_pagelist\/*/, rout_page_list);
+  app.post('/' + config.base_suburl + '/_pagelist', route_page_list);
+
+  // GitUpdate request
+  app.post('/' + config.base_suburl + '/_gitupdate', route_git_update);
+
+  // watch status change request
+  app.post('/' + config.base_suburl + '/_watchchange', watch_change_udate);
 
   // Router for / and /index with or without search parameter
   if (config.googleoauth === true) {
@@ -140,9 +150,9 @@ function initialize (config) {
     app.get('/:var(index)?', authenticate, route_search, route_home);
     app.get(/^([^.]*)/, authenticate, route_wildcard);
   } else {
-    app.get('/sitemap.xml', route_sitemap);
-    app.get('/:var(index)?', route_search, route_home);
-    app.get(/^([^.]*)/, route_wildcard);
+    // app.get('/sitemap.xml', route_sitemap);
+    app.get( '/' + config.base_suburl + '/:var(index)?', route_search);
+    app.get(new RegExp( '\/' + config.base_suburl + '(\/[^.]*)*'), route_wildcard);
   }
 
   // Handle Errors

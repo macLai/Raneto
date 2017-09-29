@@ -134,38 +134,8 @@ var Raneto = function () {
       var _this = this;
 
       var meta = {};
-      var metaArr = void 0;
-      var metaString = void 0;
-      var metas = void 0;
-
-      var yamlObject = void 0;
-
-      switch (true) {
-        case _metaRegex.test(markdownContent):
-          metaArr = markdownContent.match(_metaRegex);
-          metaString = metaArr ? metaArr[1].trim() : '';
-
-          if (metaString) {
-            metas = metaString.match(/(.*): (.*)/ig);
-            metas.forEach(function (item) {
-              var parts = item.split(': ');
-              if (parts[0] && parts[1]) {
-                meta[_this.cleanString(parts[0], true)] = parts[1].trim();
-              }
-            });
-          }
-          break;
-
-        case _metaRegexYaml.test(markdownContent):
-          metaArr = markdownContent.match(_metaRegexYaml);
-          metaString = metaArr ? metaArr[1].trim() : '';
-          yamlObject = yaml.safeLoad(metaString);
-          meta = this.cleanObjectStrings(yamlObject);
-          break;
-
-        default:
-        // No meta information
-      }
+      
+      meta.Title = markdownContent.split('\n', 1)[0];
 
       return meta;
     }
@@ -175,14 +145,7 @@ var Raneto = function () {
   }, {
     key: 'stripMeta',
     value: function stripMeta(markdownContent) {
-      switch (true) {
-        case _metaRegex.test(markdownContent):
-          return markdownContent.replace(_metaRegex, '').trim();
-        case _metaRegexYaml.test(markdownContent):
-          return markdownContent.replace(_metaRegexYaml, '').trim();
-        default:
-          return markdownContent.trim();
-      }
+      return markdownContent.substring(this.processMeta(markdownContent).Title.length + 1).trim();
     }
 
     // Replace content variables in Markdown content
@@ -370,39 +333,83 @@ var Raneto = function () {
 
       var contentDir = patch_content_dir(path.normalize(this.config.content_dir));
       var files = glob.sync(contentDir + '**/*.md');
-      var idx = (0, _lunr2.default)(function () {
-        this.field('title', { boost: 10 });
-        this.field('body');
-      });
+      // var idx = _lunr(function () {
+      //   this.use(_lunr.jp);
+
+      //   this.field('title', { boost: 10 });
+      //   this.field('body');
+      // });
+      var matchingResults = []
+      var keywords = [].concat(query, query.trim().split(/[\s\-\，\\/]+/));
+
+      function escapeHtml (string) {
+        const entityMap = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          '\'': '&#39;',
+          '/': '&#x2F;'
+        }
+        return String(string).replace(/[&<>"'\/]/g, s => entityMap[s])
+      }
 
       files.forEach(function (filePath) {
-        try {
-          var shortPath = filePath.replace(contentDir, '').trim();
-          var file = fs.readFileSync(filePath);
-          var meta = _this3.processMeta(file.toString('utf-8'));
+        var shortPath = filePath.replace(contentDir, '').trim();
+        var file = fs.readFileSync(filePath).toString('utf-8');
+        var title = file.split('\n', 1)[0];
+        var content = file.substring(title.length + 1);
+        
+        var matchNum = 0;
+        var matchPos = -1;
+        keywords.forEach(function(keyword, i) {
+          const regEx = new RegExp(keyword, 'gi')
+          var indexTitle = -1
+          var indexContent = -1
+ 
+          indexTitle = title && title.search(regEx)
+          indexContent = content && content.search(regEx)
 
-          idx.add({
-            id: shortPath,
-            title: meta.title ? meta.title : _this3.slugToTitle(shortPath),
-            body: file.toString('utf-8')
-          });
-        } catch (e) {
-          if (_this3.config.debug) {
-            console.log(e);
+          if(indexTitle < 0 && indexContent < 0) return;
+
+          if(indexTitle > 0) {
+            matchNum += 10;
+            // title = title.replace(regEx, `<code>${keyword}</code>`);
           }
+          if(indexContent > 0) {
+            matchNum++;
+            matchPos = indexContent;
+            // content = content.replace(regEx, `<em class="search-keyword">${keyword}</em>`);
+          }
+        });
+        if(matchNum > 0) {
+          var start = 0;
+          var end = 0;
+
+          start = matchPos < 201 ? 0 : matchPos - 200;
+          end = start === 0 ? 500 : matchPos  + 300;
+          var matchContent = '...' + escapeHtml(content).substring(start, end) + '...';
+
+          keywords.forEach(function(keyword, i) {
+            const regEx = new RegExp(keyword, 'gi')
+            matchContent = matchContent.replace(regEx, `<code>${keyword}</code>`);
+          })
+
+          var matchPost = {
+            title: title,
+            content: matchContent,
+            sort: matchNum,
+            slug: shortPath
+          };
+          matchingResults.push(matchPost);
         }
       });
 
-      var results = idx.search(query);
-      var searchResults = [];
+      matchingResults.sort(function(a,b) {
+        return b['sort'] > a['sort'];
+      })
 
-      results.forEach(function (result) {
-        var page = _this3.getPage(_this3.config.content_dir + result.ref);
-        page.excerpt = page.excerpt.replace(new RegExp('(' + query + ')', 'gim'), '<span class="search-query">$1</span>');
-        searchResults.push(page);
-      });
-
-      return searchResults;
+      return matchingResults;
     }
   }]);
 

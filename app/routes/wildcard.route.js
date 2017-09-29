@@ -14,11 +14,11 @@ function route_wildcard (config, raneto) {
   return function (req, res, next) {
 
     // Skip if nothing matched the wildcard Regex
-    if (!req.params[0]) { return next(); }
+    // if (!req.params[0]) { return next(); }
 
     var suffix = 'edit';
-    var slug   = req.params[0];
-    if (slug === '/') { slug = '/index'; }
+    var slug   = req.params[0] || '/';
+    if (slug === '/') { slug = config.home_dir; }
 
     var file_path      = path.normalize(raneto.config.content_dir + slug);
     var file_path_orig = file_path;
@@ -93,7 +93,7 @@ function route_wildcard (config, raneto) {
           canEdit = config.allow_editing;
         }
 
-        var username = req.cookies["diff_view"];
+        var username = req.cookies["identity"];
 
         var res_render = function() {
           return res.render(render, {
@@ -110,6 +110,7 @@ function route_wildcard (config, raneto) {
             commentlist   : commentlist,
             key           : key,
             slug          : slug,
+            watch         : watch,
             isShow        : function() {
                               return username == this.name;
                             }
@@ -120,6 +121,7 @@ function route_wildcard (config, raneto) {
         // Render comment list
         var commentlist = [];
         var key = "";
+        var watch = false;
         if (file_path_orig.indexOf(suffix, file_path_orig.length - suffix.length) == -1) {
           try{
             key = /<comment\s+id=\"([a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+)\"\s+\/>/.exec(content)[1];
@@ -130,7 +132,10 @@ function route_wildcard (config, raneto) {
           
           mysql.getComments(key, function(result) {
             commentlist = JSON.parse(JSON.stringify(result));
-            return res_render(); 
+            mysql.changeWatchStatus(key, username, false, function(result) {
+              watch = result;
+              return res_render();
+            })
           });
         }
         else {

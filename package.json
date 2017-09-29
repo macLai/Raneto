@@ -34,7 +34,8 @@
     "gulp": "gulp",
     "compile": "babel app/core/src --out-dir app/core/lib",
     "lint": "jshint app/**/*.js test/*.js",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run compile",
+    "init": "node example/gitinit.js"
   },
   "engines": {
     "node": ">=4.0.0"
