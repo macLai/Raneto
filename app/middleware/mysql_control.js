@@ -101,14 +101,10 @@ function updateComment(key, username, floor, content, project, resultNotify) {
     sql_pool.getConnection(function(err, connection) {
         if(err) throw err;
         var sql_content = "";
-        if(content) {
-            if(sql_content != "") sql_content += ","
-            sql_content += "content='" + content + "'";
-        }
-        if(project) {
-            if(sql_content != "") sql_content += ","
-            sql_content += "project='" + project + "'";
-        }
+        if(sql_content != "") sql_content += ","
+        sql_content += "content='" + content + "'";
+        if(sql_content != "") sql_content += ","
+        sql_content += "project='" + project + "'";
         if(sql_content == "") return resultNotify(false);
         connection.query("UPDATE ??.?? SET " + sql_content + " WHERE commentkey=? AND floor=? AND username=?;",
             [sql_config.db_comment_name, sql_config.table_comment_name, key, floor, username],
