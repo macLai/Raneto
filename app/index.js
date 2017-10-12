@@ -129,6 +129,9 @@ function initialize (config) {
 
   }
 
+  // PageList request
+  app.get('/' + config.base_suburl + '/_comment', route_comment);
+
   // Comment request
   app.post(new RegExp( config.base_suburl + '\/_comment\/([a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+-[a-z|0-9]+)*$'), route_comment_post);
 

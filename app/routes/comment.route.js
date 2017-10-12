@@ -8,7 +8,7 @@ var uuidV1 = require('uuid/v1');
 function get_comments(config, raneto) {
     return function (req, res, next) {
 
-        var keyword_list = req.url.split('/').filter(function(el){return el != 0;});
+        var keyword_list = req.url.split('/').filter(function(el){return el != 0 && el != config.base_suburl;});
         if(keyword_list.length == 1) {
             generateCommentKey( function(id) {
                 res.header('Content-Type', 'text/plain');
