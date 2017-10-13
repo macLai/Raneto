@@ -155,7 +155,7 @@ function initialize (config) {
   } else {
     // app.get('/sitemap.xml', route_sitemap);
     app.get( '/' + config.base_suburl + '/:var(index)?', route_search);
-    app.get(new RegExp( '\/' + config.base_suburl + '(\/[^.]*)*'), route_wildcard);
+    app.get(new RegExp( '\/' + config.base_suburl + '(\/.*)*$'), route_wildcard);
   }
 
   // Handle Errors

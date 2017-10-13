@@ -29,6 +29,9 @@ function route_wildcard (config, raneto) {
     }
 
     if (!fs.existsSync(file_path)) { file_path += '.md'; }
+    else if ( !file_path.endsWith('.md') ) {
+      return res.sendFile(file_path);
+    }
 
     fs.readFile(file_path, 'utf8', function (error, content) {
 
