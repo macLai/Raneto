@@ -35,6 +35,7 @@ function getpage(path, allTreeChk, config, childPath, child  ) {
     }
 
     if(stat.isFile()) {
+        var fileName = pathF.parse(pathFull).name;
         pathFull = pathF.resolve(pathFull, '..');
     }
 
@@ -45,8 +46,7 @@ function getpage(path, allTreeChk, config, childPath, child  ) {
         var valuePath = pathF.resolve(pathFull, value);
         var valueStat = pathF.parse(valuePath);
         tempPath['id'] = pathF.relative(config.content_dir, valuePath);
-        if(childPath == null && stat.name == valueStat.name) tempPath['name'] = '<span id="treeDemo_1_span" class="node_name ">contributing</span>';
-        else tempPath['name'] = valueStat.name;
+        tempPath['name'] = valueStat.name;
         tempPath['isParent'] = fs.statSync(valuePath).isDirectory();
         tempPath['click'] = false;
         if(tempPath['isParent'] && valueStat.name == childPath) {
@@ -56,6 +56,9 @@ function getpage(path, allTreeChk, config, childPath, child  ) {
         else if(valueStat.ext == '.md') {
             tempPath['url'] = pathF.resolve('/' + config.base_suburl, tempPath['id'], '..', tempPath['name']);
             tempPath['target'] = "_self";
+            if(valueStat.name == fileName) {
+                tempPath['font'] = {'font-weight':'bold'};
+            }
         }
         if((tempPath['isParent'] && glob.sync(valuePath + '/*.md', 'absolute').length > 0)
              || valueStat.ext == '.md') pathList.push(tempPath);

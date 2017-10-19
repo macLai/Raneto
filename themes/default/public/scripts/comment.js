@@ -44,11 +44,13 @@ $(document).ready(function() {
             enable: true,
             url: $(".sidebar-nav").attr("request"),
             autoParam:["id", "name", "level"],
-            otherParam:["path", window.location.pathname]
+            otherParam:["path", $(".sidebar-nav").attr("para")]
         },
         view: {
             showLine: false,
-            showIcon: false
+            showIcon: false,
+            fontCss: getFont,
+            nameIsHTML: true
         },
         callback: {
             beforeClick: function (treeId, treeNode, clickFlag) {
@@ -58,5 +60,8 @@ $(document).ready(function() {
             }
         }
     };
+    function getFont(treeId, node) {
+        return node.font ? node.font : {};
+    }
     $.fn.zTree.init($("#treeDemo"), setting);
 })
